@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contoso Outdoor Company</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        .category {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .product {
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 10px;
+            width: calc(33% - 40px);
+            box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .product img {
+            max-width: 100px;
+            max-height: 100px;
+            margin-bottom: 10px;
+        }
+
+        .product h3 {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .product p {
+            font-size: 1em;
+            margin: 5px 0;
+        }
+
+        @media (max-width: 768px) {
+            .product {
+                width: calc(50% - 40px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Contoso Outdoor Company</h1>
+
+    <section>
+        <h2>Tents</h2>
+        <p>Unfold adventure with Contoso's range of tents.</p>
+        <div class="category">
+            <div class="product">
+                <img src="/assests/tent1.png" alt="TrailMasters x4 Tent">
+                <h3>TrailMasters x4 Tent</h3>
+                <p>$300</p>
+            </div>
+            <div class="product">
+                <img src="/assests/tent2.png" alt="Alpine Explorer Tent">
+                <h3>Alpine Explorer Tent</h3>
+                <p>$360</p>
+            </div>
+            <div class="product">
+                <img src="/assests/tent3.png" alt="Sky View 2-Person Tent">
+                <h3>Sky View 2-Person Tent</h3>
+                <p>$380</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Backpacks</h2>
+        <p>Our backpack category is equipped to accompany you on every twist and turn.</p>
+        <div class="category">
+            <div class="product">
+                <img src="/assests/backpack1.png" alt="Adventurer Pro Backpack">
+                <h3>Adventurer Pro Backpack</h3>
+                <p>$60</p>
+            </div>
+            <div class="product">
+                <img src="/assests/backpack2.png" alt="Summit Climber Backpack">
+                <h3>Summit Climber Backpack</h3>
+                <p>$70</p>
+            </div>
+            <div class="product">
+                <img src="/assests/backpack3.png" alt="TrailLite DayPack">
+                <h3>TrailLite DayPack</h3>
+                <p>$40</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Hiking Clothing</h2>
+        <p>Step into nature with Contoso's outdoor hiking clothing.</p>
+        <div class="category">
+            <div class="product">
+                <img src="/assests/hoodie.png" alt="Summit Breeze Jacket">
+                <h3>Summit Breeze Jacket</h3>
+                <p>$60</p>
+            </div>
+            <div class="product">
+                <img src="/assests/vest.png" alt="Trail Blaze Pants">
+                <h3>Trail Blaze Vest</h3>
+                <p>$80</p>
+            </div>
+            <div class="product">
+                <img src="/assests/hiking.png" alt="TREKSTAR Boots">
+                <h3>TREKSTAR Boots</h3>
+                <p>$120</p>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
