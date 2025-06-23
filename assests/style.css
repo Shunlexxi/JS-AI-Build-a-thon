@@ -1,70 +1,58 @@
 /* Styles for the e-commerce product listing page */
 
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-}
-
-header {
-    background-color: #4CAF50;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-}
-
-main {
-    padding: 20px;
-}
-
-.product-category {
-    margin-bottom: 40px;
-}
-
-h2 {
-    border-bottom: 2px solid #4CAF50;
-    padding-bottom: 10px;
-}
-
-.products {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
-.product {
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    width: calc(30% - 20px);
-    margin: 10px;
-    padding: 15px;
-    text-align: center;
-}
-
-.product img {
-    width: 100%;
-    height: auto;
-    border-radius: 5px;
-}
-
-footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #4CAF50;
-    color: white;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}
-    color: white;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}
-    color: white;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        .container {
+            width: 90%;
+            margin: auto;
+            overflow: hidden;
+        }
+        section {
+            margin: 20px 0;
+            background: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .product-category {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .product {
+            text-align: center;
+            margin: 15px;
+        }
+        .product img {
+            max-width: 100px;
+            max-height: 100px;
+            margin-bottom: 10px;
+        }
+        .product-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .product-price {
+            color: #555;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px 0;
+            background: #4CAF50;
+            color: white;
+        }
