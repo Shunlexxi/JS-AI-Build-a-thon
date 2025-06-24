@@ -5,6 +5,7 @@
         "@azure/core-auth": "latest",
         "@azure/core-sse": "latest",
         "dotenv": "^16.5.0",
-        "openai": "latest"
+        "openai": "latest",
+        "pdf-parse": "^1.1.1"
     }
 }
