@@ -1,78 +1,244 @@
-# Vite + Lit AI Chat Interface Template
 
-This template provides a simple, modern chat UI built with [Vite](https://vitejs.dev/) and [Lit](https://lit.dev/). It's designed as a starting point for integrating AI chat models (such as Azure OpenAI, OpenAI, or your own backend) into a web application.
 
-![Chat UI Screenshot](./ai-chat-interface.png)
+# 🧠 Quest: I want to add conversation memory to my app
 
-## Features
+> To reset your progress and select a different quest, click this button:
+>
+> [![Reset Progess](https://img.shields.io/badge/Reset--Progress-ff3860?logo=mattermost)](../../issues/new?title=Reset+Quest&labels=reset-quest&body=🔄+I+want+to+reset+my+AI+learning+quest+and+start+from+the+beginning.%0A%0A**Please+wait+about+15+seconds.+Your+progress+will+be+reset,+this+issue+will+automatically+close,+and+you+will+be+taken+back+to+the+Welcome+step+to+select+a+new+quest.**)
 
-- ⚡️ **Vite** for fast development and builds
-- ✨ **Lit** for lightweight, reactive web components
-- 💬 **Chat UI** with persistent local history
-- 🗂️ **Easy integration** with your AI backend (just replace a single function)
+## 📋 Pre-requisites
 
-## Getting Started
+1. A GitHub account
+2. [Visual Studio Code](https://code.visualstudio.com/) installed
+3. [Node.js](https://nodejs.org/en) installed
+4. An Azure subscription. Use the [free trial](https://azure.microsoft.com/free/) if you don't have one, or [Azure for Students](https://azure.microsoft.com/free/students/) if you are a student.
+5. [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd?tabs=winget-windows%2Cbrew-mac%2Cscript-linux&pivots=os-windows) installed
 
-### Prerequisites
+## 📝 Overview
 
-- [Node.js](https://nodejs.org/)
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
-- [Azure Developer CLI(azd)](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd?tabs=winget-windows%2Cbrew-mac%2Cscript-linux&pivots=os-windows) installed
+In this step, you will learn you can simplify integrating AI features into your web applications using frameworks. [LangChain.js](https://js.langchain.com/docs/introduction/) is a framework for developing applications powered by language models. It provides a standard interface for working with different LLMs, tools, and data sources, making it easier to build complex applications.
 
-### File Structure
+### Assumption ⚠️
 
-```markdown
-webapp/
-  ├── index.html
-  ├── package.json
-  ├── src/
-  │   ├── main.js
-  │   ├── index.css
-  │   ├── components/
-  │   │   ├── chat.js
-  │   │   └── chat.css
-  │   └── utils/
-  │       └── chatStore.js
-  └── public/
-      └── vite.svg
+This step assumes you have already completed the previous steps in this project and have a working web application that uses Azure's LLM endpoints. If you haven't done so, please click the **Reset Progress** button above to select the _Add a simple chat interface_ quest.
+
+## Step 1️⃣: Add LangChain.js to your project
+We'll first install LangChain.js in our project to ensure our backend can communicate with Azure's LLM endpoints using LangChain's abstractions.
+
+In your webapi directory, run
+
+```bash
+npm install langchain @langchain/openai
 ```
-- `chat.js`: Main chat UI component
-- `chatStore.js`: Utilities for saving/loading chat history
-- `chat.css`: Styles for the chat UI 
+The current api code uses the Azure REST SDK directly. By switching to LangChain.js, we will decouple to code to take advantage of its abstractions and features like chains (composing tools and LLMs) and memory (storing conversation history).
 
-### Get the Code
+### Update imports
 
-If you already have the Azure Developer CLI installed on your machine, first login and select your subscription using
+Open `server.js` and replace:
 
-```sh
-azd auth login
-```
+```javascript
+import ModelClient, { isUnexpected } from "@azure-rest/ai-inference";
+import { AzureKeyCredential } from "@azure/core-auth";
+``` 
 
-then run this command in a new directory to initialize the project.
+with:
 
-```sh
-azd init -t juliamuiruri4/vite-chat-interface
+```javascript
+import { AzureChatOpenAI } from "@langchain/openai";
 ```
 
-### Run the App
+### Update client initialization
+Initialize LangChain's `AzureChatOpenAI` model client by replacing:
 
-To start the development server, inside the project directory (root) run:
-
-```sh
-cd webapp
-npm install
-npm run dev
+```javascript
+const client = ModelClient(
+  process.env.AZURE_INFERENCE_SDK_ENDPOINT,
+  new AzureKeyCredential(process.env.AZURE_INFERENCE_SDK_KEY)
+);
 ```
 
-### To deploy the app on Azure
+with:
 
-To deploy the app on Azure (Azure Static Web Apps), run:
-
-```sh
-azd up
+```javascript
+const chatModel = new AzureChatOpenAI({
+  azureOpenAIApiKey: process.env.AZURE_INFERENCE_SDK_KEY,
+  azureOpenAIApiInstanceName: process.env.INSTANCE_NAME, // In target url: https://<INSTANCE_NAME>.services...
+  azureOpenAIApiDeploymentName: process.env.DEPLOYMENT_NAME, // i.e "gpt-4o"
+  azureOpenAIApiVersion: "2024-08-01-preview", // In target url: ...<VERSION>
+  temperature: 1,
+  maxTokens: 4096,
+});
 ```
-This command will create the necessary Azure resources and deploy your app.
 
-### Usage
+### Update chat endpoint
 
-The main chat component is **ChatInterface**. It stores messages in local storage and simulates AI responses. To connect to your own AI backend, replace the `_mockAiCall` method with your API call logic.
+Replace the Azure REST SDK api call logic in the try-catch block (_app.post("/chat")_) with the following code:
+
+```javascript
+  try {
+    const response = await chatModel.invoke(messages);
+    res.json({ reply: response.content });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      error: "Model call failed",
+      message: err.message,
+      reply: "Sorry, I encountered an error. Please try again."
+    });
+  }
+```
+
+### Test the integration
+
+Restart the server to confirm the changes are working. 
+
+## Step 2️⃣: Add conversation memory
+
+Currently, the chat model does not remember previous messages. For example, if you send a message like _"Hey, you can call me Terry. What should I call you?"_
+
+Then ask the model _"Quiz time. What's my name?"_. The model will not remember your name because your name is not passed to the model in the prompt.
+
+![Memory test](https://github.com/juliamuiruri4/JS-Journey-to-AI-Foundry/blob/assets/js-ai-journey-assets/memory-test.png?raw=true)
+
+To add memory, you will use LangChain's built-in memory modules - `ChatMessageHistory` and `ConversationSummaryMemory`. Conversation memory allows the AI to reference previous exchanges in a session, enabling more context-aware and coherent responses and LangChain.js provides built-in memory modules that make this easy to implement. With LangChain, you can implement stateful AI app experiences without manually managing chat logs, and you can easily switch between in-memory, Redis, or other storage options.
+
+
+### How it would work in your app
+
+- Each user session (or conversation) maintains a history of messages.
+- When a user sends a new message, the backend includes previous exchanges from that session in the prompt.
+- The AI can reference earlier questions and answers, making the chat feel more natural and intelligent.
+
+### Update imports
+
+Add the following imports to the top of your `server.js` file:
+
+```javascript
+import { BufferMemory } from "langchain/memory";
+import { ChatMessageHistory } from "langchain/stores/message/in_memory";
+```
+
+### Set up session-based in-memory store
+
+Store session histories, allowing you to maintain separate chat histories for different users or sessions.
+
+```javascript
+const sessionHistories = {};
+```
+
+### Add a helper function to get/create a session history
+
+This utility function will check if a session history already exists for a given session ID. If it doesn't, it will create a new one.
+
+```javascript
+function getSessionMemory(sessionId) {
+  if (!sessionMemories[sessionId]) {
+    const history = new ChatMessageHistory();
+    sessionMemories[sessionId] = new BufferMemory({
+      chatHistory: history,
+      returnMessages: true,
+      memoryKey: "chat_history",
+    });
+  }
+  return sessionMemories[sessionId];
+}
+```
+
+### Update the chat endpoint
+
+Lastly, you'll update the /chat handler to fetch session memory and load the chat history. Before sending the prompt to the model, the chat history will be added to the messages array so that the AI has context when generating the next reply. You then save the latest user message and model response to the session memory.
+
+```javascript
+app.post("/chat", async (req, res) => {
+  const userMessage = req.body.message;
+  const useRAG = req.body.useRAG === undefined ? true : req.body.useRAG;
+  const sessionId = req.body.sessionId || "default";
+
+  let sources = [];
+
+  const memory = getSessionMemory(sessionId);
+  const memoryVars = await memory.loadMemoryVariables({});
+
+  if (useRAG) {
+    await loadPDF();
+    sources = retrieveRelevantContent(userMessage);
+  }
+
+  // Prepare system prompt
+  const systemMessage = useRAG
+    ? {
+        role: "system",
+        content: sources.length > 0
+          ? `You are a helpful assistant for Contoso Electronics. You must ONLY use the information provided below to answer.
+
+--- EMPLOYEE HANDBOOK EXCERPTS ---
+${sources.join('
+
+')}
+--- END OF EXCERPTS ---`
+          : `You are a helpful assistant for Contoso Electronics. The excerpts do not contain relevant information for this question. Reply politely: "I'm sorry, I don't know. The employee handbook does not contain information about that."`,
+      }
+    : {
+        role: "system",
+        content: "You are a helpful and knowledgeable assistant. Answer the user's questions concisely and informatively.",
+      };
+
+  try {
+    // Build final messages array
+    const messages = [
+      systemMessage,
+      ...(memoryVars.chat_history || []),
+      { role: "user", content: userMessage },
+    ];
+
+    const response = await chatModel.invoke(messages);
+
+    await memory.saveContext({ input: userMessage }, { output: response.content });
+
+    res.json({ reply: response.content, sources });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      error: "Model call failed",
+      message: err.message,
+      reply: "Sorry, I encountered an error. Please try again."
+    });
+  }
+});
+```
+
+To test this, open the chat UI in your browser and send a message like _"Hey, you can call me Terry. What should I call you?"_ and then ask _"Quiz time. What's my name?"_. The model should remember your name.
+
+  ![Memory test passed](https://github.com/juliamuiruri4/JS-Journey-to-AI-Foundry/blob/assets/js-ai-journey-assets/memory-test-passed.png?raw=true)
+
+## ✅ Activity: Push your updated code to the repository
+
+### Quest Checklist
+
+To complete this quest and **AUTOMATICALLY UPDATE** your progress, you MUST push your code to the repository as described below.
+
+**Checklist**
+
+- [ ] Have a `@langchain/azure-oenai` dependency in your package.json in the webapi directory
+
+1. In the terminal, run the following commands to add, commit, and push your changes to the repository:
+
+    ```bash
+    git add .
+    git commit -m "Updated to use LangChain.js and added conversation memory"
+    git push
+    ```
+
+2.  After pushing your changes, **WAIT ABOUT 15 SECONDS FOR GITHUB ACTIONS TO UPDATE YOUR README**.
+
+> To skip this quest and select a different one, click this button:
+>
+> [![Skip to another quest](https://img.shields.io/badge/Skip--to--another--quest-ff3860?logo=mattermost)](../../issues/new?title=Skip+quest&labels=reset-quest&body=🔄+I+want+to+reset+my+AI+learning+quest+and+start+from+the+beginning.%0A%0A**Please+wait+about+15+seconds.+Your+progress+will+be+reset,+this+issue+will+automatically+close,+and+you+will+be+taken+back+to+the+Welcome+step+to+select+a+new+quest.**)
+
+## 📚 Further Reading
+
+Here are some additional resources to help you learn more about LangChain.js and its features:
+- [Serverless AI Chat with RAG using LangChain.js sample](https://github.com/Azure-Samples/serverless-chat-langchainjs)
+- [LangChain.js docs](https://js.langchain.com/docs/introduction/)
+
+
