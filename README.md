@@ -1,244 +1,54 @@
 
 
-# 🧠 Quest: I want to add conversation memory to my app
+<!-- readme -->
 
-> To reset your progress and select a different quest, click this button:
->
-> [![Reset Progess](https://img.shields.io/badge/Reset--Progress-ff3860?logo=mattermost)](../../issues/new?title=Reset+Quest&labels=reset-quest&body=🔄+I+want+to+reset+my+AI+learning+quest+and+start+from+the+beginning.%0A%0A**Please+wait+about+15+seconds.+Your+progress+will+be+reset,+this+issue+will+automatically+close,+and+you+will+be+taken+back+to+the+Welcome+step+to+select+a+new+quest.**)
+# 🎉 Welcome to the JS AI Build-a-thon!
 
-## 📋 Pre-requisites
+This is a hands-on experience designed for you to work through a series of quests, each designed to guide you through the process of building AI apps step by step.
 
-1. A GitHub account
-2. [Visual Studio Code](https://code.visualstudio.com/) installed
-3. [Node.js](https://nodejs.org/en) installed
-4. An Azure subscription. Use the [free trial](https://azure.microsoft.com/free/) if you don't have one, or [Azure for Students](https://azure.microsoft.com/free/students/) if you are a student.
-5. [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd?tabs=winget-windows%2Cbrew-mac%2Cscript-linux&pivots=os-windows) installed
+🧠 Concepts you will cover include:-
 
-## 📝 Overview
+- GitHub Models
+- Azure AI Foundry VS Code Extension
+- Azure AI Foundry Portal
+- AI Toolkit VS Code Extension
+- Azure Developer CLI (azd)
+- Express.js
+- Vite, Lit
+- LangChain.js
+- Azure AI Agents Service
+- MCP Tools
 
-In this step, you will learn you can simplify integrating AI features into your web applications using frameworks. [LangChain.js](https://js.langchain.com/docs/introduction/) is a framework for developing applications powered by language models. It provides a standard interface for working with different LLMs, tools, and data sources, making it easier to build complex applications.
+## 🗺️ How it works
 
-### Assumption ⚠️
+This build-a-thon is organized into **quests** — choose the one that matches your goals and click its badge to begin.
 
-This step assumes you have already completed the previous steps in this project and have a working web application that uses Azure's LLM endpoints. If you haven't done so, please click the **Reset Progress** button above to select the _Add a simple chat interface_ quest.
+Each quest has a required activity (e.g., push code). After you complete it, **GitHub Actions** will automatically unlock your next step.
 
-## Step 1️⃣: Add LangChain.js to your project
-We'll first install LangChain.js in our project to ensure our backend can communicate with Azure's LLM endpoints using LangChain's abstractions.
+**Tips:**  
+⭐ **Recommended path**⭐ Start with the first quest and go in order for the **best** learning experience.  
 
-In your webapi directory, run
+🔄 To restart, click the **Reset** button at the top of any page.
 
-```bash
-npm install langchain @langchain/openai
-```
-The current api code uses the Azure REST SDK directly. By switching to LangChain.js, we will decouple to code to take advantage of its abstractions and features like chains (composing tools and LLMs) and memory (storing conversation history).
 
-### Update imports
+## ✅ Activity: Select a quest
 
-Open `server.js` and replace:
+Click on a quest and follow the instructions to get started.
 
-```javascript
-import ModelClient, { isUnexpected } from "@azure-rest/ai-inference";
-import { AzureKeyCredential } from "@azure/core-auth";
-``` 
+[![Static Badge](https://img.shields.io/badge/Quest-I_want_to_build_a_local_GenAI_prototype-green)](../../issues/new?title=Quest:+I+want+to+build+a+local+GenAI+prototype&labels=quest&body=🚀+I%27m+ready+to+build+my+first+local+GenAI+prototype%21+Let%27s+get+started+with+AI+in+JavaScript%21%0A%0A**Please+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
 
-with:
+[![Static Badge](https://img.shields.io/badge/Quest-I_want_to_move_my_prototype_to_Azure-orange)](../../issues/new?title=Quest:+I+have+a+prototype.+Let's+move+to+Azure&labels=quest&body=☁️+Time+to+take+my+AI+prototype+to+the+cloud%21+Excited+to+deploy+on+Azure+and+scale+up%21%0A%0A**Please+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
 
-```javascript
-import { AzureChatOpenAI } from "@langchain/openai";
-```
+[![Static Badge](https://img.shields.io/badge/Quest-I_want_to_add_a_simple_chat_interface_to_my_app-blue)](../../issues/new?title=Quest:+I+want+to+add+a+simple+chat+interface&labels=quest&body=%F0%9F%92%AC+Let%27s+add+a+chat+interface+and+make+my+AI+app+interactive%21+Ready+for+some+real-time+conversations%21%0A%0A**Please+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
 
-### Update client initialization
-Initialize LangChain's `AzureChatOpenAI` model client by replacing:
+[![Static Badge](https://img.shields.io/badge/Quest-I_want_to_integrate_external_data_using_RAG-purple)](../../issues/new?title=Quest:+I+want+to+create+my+first+AI+app+with+RAG&labels=quest&body=%F0%9F%93%9A+I%27m+diving+into+RAG+and+building+my+first+retrieval-augmented+AI+app%21+Let%27s+do+this%21%0A%0A**Please+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
 
-```javascript
-const client = ModelClient(
-  process.env.AZURE_INFERENCE_SDK_ENDPOINT,
-  new AzureKeyCredential(process.env.AZURE_INFERENCE_SDK_KEY)
-);
-```
+[![Static Badge](https://img.shields.io/badge/Quest-I_want_to_build_an_AI_Agent-violet)](../../issues/new?title=Quest:+I+want+to+build+an+agent&labels=quest&body=%F0%9F%A4%96+Let%27s+build+an+AI+agent+that+can+help+and+interact+with+users%21+Excited+for+this+step%21%0A%0A**Please+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
 
-with:
+[![Static Badge](https://img.shields.io/badge/Quest-I_want_to_explore_frameworks-yellow)](../../issues/new?title=Quest:+I+want+to+explore+frameworks&labels=quest&body=🛠️+Let%27s+explore+frameworks+and+build+something+amazing%21+Excited+to+learn+and+experiment%21%0A%0A**Please+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
 
-```javascript
-const chatModel = new AzureChatOpenAI({
-  azureOpenAIApiKey: process.env.AZURE_INFERENCE_SDK_KEY,
-  azureOpenAIApiInstanceName: process.env.INSTANCE_NAME, // In target url: https://<INSTANCE_NAME>.services...
-  azureOpenAIApiDeploymentName: process.env.DEPLOYMENT_NAME, // i.e "gpt-4o"
-  azureOpenAIApiVersion: "2024-08-01-preview", // In target url: ...<VERSION>
-  temperature: 1,
-  maxTokens: 4096,
-});
-```
+[![Static Badge](https://img.shields.io/badge/Quest-I_want_to_use_MCP_tools-cyan)](../../issues/new?title=Quest:+I+want+to+use+MCP+tools&labels=quest&body=🔧+Time+to+dive+into+MCP+tools%21+Let%27s+get+started%21%0A%0A**Please+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
 
-### Update chat endpoint
-
-Replace the Azure REST SDK api call logic in the try-catch block (_app.post("/chat")_) with the following code:
-
-```javascript
-  try {
-    const response = await chatModel.invoke(messages);
-    res.json({ reply: response.content });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      error: "Model call failed",
-      message: err.message,
-      reply: "Sorry, I encountered an error. Please try again."
-    });
-  }
-```
-
-### Test the integration
-
-Restart the server to confirm the changes are working. 
-
-## Step 2️⃣: Add conversation memory
-
-Currently, the chat model does not remember previous messages. For example, if you send a message like _"Hey, you can call me Terry. What should I call you?"_
-
-Then ask the model _"Quiz time. What's my name?"_. The model will not remember your name because your name is not passed to the model in the prompt.
-
-![Memory test](https://github.com/juliamuiruri4/JS-Journey-to-AI-Foundry/blob/assets/js-ai-journey-assets/memory-test.png?raw=true)
-
-To add memory, you will use LangChain's built-in memory modules - `ChatMessageHistory` and `ConversationSummaryMemory`. Conversation memory allows the AI to reference previous exchanges in a session, enabling more context-aware and coherent responses and LangChain.js provides built-in memory modules that make this easy to implement. With LangChain, you can implement stateful AI app experiences without manually managing chat logs, and you can easily switch between in-memory, Redis, or other storage options.
-
-
-### How it would work in your app
-
-- Each user session (or conversation) maintains a history of messages.
-- When a user sends a new message, the backend includes previous exchanges from that session in the prompt.
-- The AI can reference earlier questions and answers, making the chat feel more natural and intelligent.
-
-### Update imports
-
-Add the following imports to the top of your `server.js` file:
-
-```javascript
-import { BufferMemory } from "langchain/memory";
-import { ChatMessageHistory } from "langchain/stores/message/in_memory";
-```
-
-### Set up session-based in-memory store
-
-Store session histories, allowing you to maintain separate chat histories for different users or sessions.
-
-```javascript
-const sessionHistories = {};
-```
-
-### Add a helper function to get/create a session history
-
-This utility function will check if a session history already exists for a given session ID. If it doesn't, it will create a new one.
-
-```javascript
-function getSessionMemory(sessionId) {
-  if (!sessionMemories[sessionId]) {
-    const history = new ChatMessageHistory();
-    sessionMemories[sessionId] = new BufferMemory({
-      chatHistory: history,
-      returnMessages: true,
-      memoryKey: "chat_history",
-    });
-  }
-  return sessionMemories[sessionId];
-}
-```
-
-### Update the chat endpoint
-
-Lastly, you'll update the /chat handler to fetch session memory and load the chat history. Before sending the prompt to the model, the chat history will be added to the messages array so that the AI has context when generating the next reply. You then save the latest user message and model response to the session memory.
-
-```javascript
-app.post("/chat", async (req, res) => {
-  const userMessage = req.body.message;
-  const useRAG = req.body.useRAG === undefined ? true : req.body.useRAG;
-  const sessionId = req.body.sessionId || "default";
-
-  let sources = [];
-
-  const memory = getSessionMemory(sessionId);
-  const memoryVars = await memory.loadMemoryVariables({});
-
-  if (useRAG) {
-    await loadPDF();
-    sources = retrieveRelevantContent(userMessage);
-  }
-
-  // Prepare system prompt
-  const systemMessage = useRAG
-    ? {
-        role: "system",
-        content: sources.length > 0
-          ? `You are a helpful assistant for Contoso Electronics. You must ONLY use the information provided below to answer.
-
---- EMPLOYEE HANDBOOK EXCERPTS ---
-${sources.join('
-
-')}
---- END OF EXCERPTS ---`
-          : `You are a helpful assistant for Contoso Electronics. The excerpts do not contain relevant information for this question. Reply politely: "I'm sorry, I don't know. The employee handbook does not contain information about that."`,
-      }
-    : {
-        role: "system",
-        content: "You are a helpful and knowledgeable assistant. Answer the user's questions concisely and informatively.",
-      };
-
-  try {
-    // Build final messages array
-    const messages = [
-      systemMessage,
-      ...(memoryVars.chat_history || []),
-      { role: "user", content: userMessage },
-    ];
-
-    const response = await chatModel.invoke(messages);
-
-    await memory.saveContext({ input: userMessage }, { output: response.content });
-
-    res.json({ reply: response.content, sources });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      error: "Model call failed",
-      message: err.message,
-      reply: "Sorry, I encountered an error. Please try again."
-    });
-  }
-});
-```
-
-To test this, open the chat UI in your browser and send a message like _"Hey, you can call me Terry. What should I call you?"_ and then ask _"Quiz time. What's my name?"_. The model should remember your name.
-
-  ![Memory test passed](https://github.com/juliamuiruri4/JS-Journey-to-AI-Foundry/blob/assets/js-ai-journey-assets/memory-test-passed.png?raw=true)
-
-## ✅ Activity: Push your updated code to the repository
-
-### Quest Checklist
-
-To complete this quest and **AUTOMATICALLY UPDATE** your progress, you MUST push your code to the repository as described below.
-
-**Checklist**
-
-- [ ] Have a `@langchain/azure-oenai` dependency in your package.json in the webapi directory
-
-1. In the terminal, run the following commands to add, commit, and push your changes to the repository:
-
-    ```bash
-    git add .
-    git commit -m "Updated to use LangChain.js and added conversation memory"
-    git push
-    ```
-
-2.  After pushing your changes, **WAIT ABOUT 15 SECONDS FOR GITHUB ACTIONS TO UPDATE YOUR README**.
-
-> To skip this quest and select a different one, click this button:
->
-> [![Skip to another quest](https://img.shields.io/badge/Skip--to--another--quest-ff3860?logo=mattermost)](../../issues/new?title=Skip+quest&labels=reset-quest&body=🔄+I+want+to+reset+my+AI+learning+quest+and+start+from+the+beginning.%0A%0A**Please+wait+about+15+seconds.+Your+progress+will+be+reset,+this+issue+will+automatically+close,+and+you+will+be+taken+back+to+the+Welcome+step+to+select+a+new+quest.**)
-
-## 📚 Further Reading
-
-Here are some additional resources to help you learn more about LangChain.js and its features:
-- [Serverless AI Chat with RAG using LangChain.js sample](https://github.com/Azure-Samples/serverless-chat-langchainjs)
-- [LangChain.js docs](https://js.langchain.com/docs/introduction/)
+[![Static Badge](https://img.shields.io/badge/Quest-I_want_to_create_templates-pink)](../../issues/new?title=Quest:+I+want+to+create+templates&labels=quest&body=📄+Let%27s+create+templates+to+streamline+future+projects%21+Excited+to+design+and+build%21%0A%0A**Please+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
 
 
