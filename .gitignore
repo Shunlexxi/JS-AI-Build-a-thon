@@ -36,3 +36,5 @@ test-output/
 # Config
 config.yaml
 package-lock.json
+
+my-agent.agent.yaml
