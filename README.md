@@ -1,54 +1,93 @@
 
 
-<!-- readme -->
+# ⚡️ Quest: I want a Production-Ready Template to customize
 
-# 🎉 Welcome to the JS AI Build-a-thon!
+> To reset your progress and select a different quest, click this button:
+>
+> [![Reset Progess](https://img.shields.io/badge/Reset--Progress-ff3860?logo=mattermost)](../../issues/new?title=Reset+Quest&labels=reset-quest&body=🔄+I+want+to+reset+my+AI+learning+quest+and+start+from+the+beginning.%0A%0A**Please+wait+about+15+seconds.+Your+progress+will+be+reset,+this+issue+will+automatically+close,+and+you+will+be+taken+back+to+the+Welcome+step+to+select+a+new+quest.**)
 
-This is a hands-on experience designed for you to work through a series of quests, each designed to guide you through the process of building AI apps step by step.
+## 📋 Pre-requisites
 
-🧠 Concepts you will cover include:-
+1. A GitHub account
+2. [Visual Studio Code](https://code.visualstudio.com/) installed
+3. [Node.js](https://nodejs.org/en) installed
+4. An Azure subscription. Use the [free trial](https://azure.microsoft.com/free/) if you don't have one, or [Azure for Students](https://azure.microsoft.com/free/students/) if you are a student.
+5. [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd?tabs=winget-windows%2Cbrew-mac%2Cscript-linux&pivots=os-windows) installed
 
-- GitHub Models
-- Azure AI Foundry VS Code Extension
-- Azure AI Foundry Portal
-- AI Toolkit VS Code Extension
-- Azure Developer CLI (azd)
-- Express.js
-- Vite, Lit
-- LangChain.js
-- Azure AI Agents Service
-- MCP Tools
+## 📝 Overview
 
-## 🗺️ How it works
+Throughout all quests in this project, you have been following a minimalistic approach to building functional AI applications. However, in today's fast-paced world of technology, building robust production-ready AI solutions demands the use of the right tools and frameworks, and adoption of industry best practices.
 
-This build-a-thon is organized into **quests** — choose the one that matches your goals and click its badge to begin.
+This can be a daunting task, often requiring:-
+- Too many decisions to make
+- Difficulty in identifying and implementing shifting industry best practices
+- Need for repeatable and scalable solutions
+- Familiarity with the latest tools, services, and frameworks
 
-Each quest has a required activity (e.g., push code). After you complete it, **GitHub Actions** will automatically unlock your next step.
+To address these challenges, this quest introduces you azd-templates, a collection of production-ready templates that can be used to quickly build and deploy AI applications. These templates are designed to be easy to use and customizable, allowing you to focus on building your application rather than worrying about the underlying infrastructure.
 
-**Tips:**  
-⭐ **Recommended path**⭐ Start with the first quest and go in order for the **best** learning experience.  
+## 🧰 Azure Developer CLI (azd)
 
-🔄 To restart, click the **Reset** button at the top of any page.
+The Azure Developer CLI (azd) is an open-source, developer-centric command-line (CLI) tool, part of a wider ecosystem to help you accelerate the provisioning and deployment of applications to Azure. Long gone are the many arguments and flags typically used, azd uses intuitive, developer-friendly commands that represent key development stages, boosting your overall productivity.
+
+| azd command | Objective |
+|-------------|-------------|
+| `azd auth`  | Authenticate with Azure |
+| `azd init`  | Initializes a new project |
+| `azd package`  | Packages the application's code to be deployed to Azure. |
+| `azd provision`  | Provision the Azure resources for an application. |
+| `azd deploy`  | Deploy the application's code to Azure. |
+| `azd up`    | Provisions and deploys the application |
+| `azd down`  | Deletes the Azure resources for an application.
+
+## 📚 azd Templates
+
+azd templates are a collection of application code (samples) and azd configuration files that can be used to quickly customize and deploy production-ready applications to Azure. 
+
+Each template includes:-
+- **Proof-of-concept (PoC) starter code** to help you kickstart your project without starting from scratch. These templates go beyond ‘hello-world’ examples, demonstrating how to build complex systems, allowing you to customize the code, or completely replace with your own,
+- Everything you need to get a **Fully managed end-to-end system/ application** running on Azure, with configuration files to handle one-click deployments,
+- **Reusable Infrastructure as Code (IaC) assets** to provision and maintain cloud services
+
+With azd templates, you can: -
+- Focus on writing the best code and deployment infrastructure for your application all in one context
+- Quickly create prototypes and proof-of-concept applications, accelerating innovation
+- Learn industry best practices and patterns for building production-ready AI applications
+
+## ✅ Activity: Browse through JS/TS AI Templates
+
+The key to identifying the right template for your project is to understand the requirements of your application. The templates are designed to be flexible and customizable, allowing you to choose the one that best fits your needs.
+
+Then:-
+1. Visit the [AI app template](https://azure.github.io/ai-app-templates/?tags=javascript&tags=typescript) gallery to browse through the available templates.
+
+    ![AI App templates](https://github.com/juliamuiruri4/JS-Journey-to-AI-Foundry/blob/assets/js-ai-journey-assets/ai-templates.png?raw=true)
+
+2. Once you have identified a template that meets your needs, click on it to view the details and find instructions on how to use it.
+
+    ![Gen AI chat frontend templates](https://github.com/juliamuiruri4/JS-Journey-to-AI-Foundry/blob/assets/js-ai-journey-assets/genai-chat-frontend-template.png?raw=true)
+
+Some of the popular templates for JavaScript developers are:-
+- [Serverless GenAI assistant with LangChain](https://azure.github.io/ai-app-templates/repo/azure-samples/serverless-chat-langchainjs/)
+- [GenAI chat frontend including debug, restyle, and revisit](https://azure.github.io/ai-app-templates/repo/azure-samples/azure-openai-chat-frontend/)
+- [Build RAG apps with LlamaIndex](https://azure.github.io/ai-app-templates/repo/azure-samples/llama-index-javascript/)
+- [RAG chat with Azure AI Search + JavaScript](https://azure.github.io/ai-app-templates/repo/azure-samples/azure-search-openai-javascript/)
+- [Serverless GenAI assistant using function calling](https://azure.github.io/ai-app-templates/repo/azure-samples/azure-openai-assistant-javascript/)
+
+### Quest Checklist
+
+To complete this quest and **AUTOMATICALLY UPDATE** your progress, you MUST push your code to the repository as described below.
+
+**Checklist**
+
+[![Complete Quest](https://img.shields.io/badge/Complete--Quest-ff3860?logo=esbuild)](/issues/new?title=Quest:+I+want+a+Production-Ready+Template+to+customize&labels=quest&body=🚀+I%27ve+browsed+through+the+AI+App+Template+gallery%21%0A%0A**After+you+click+on+Create+below,+wait+about+15+seconds.+This+issue+will+automatically+close,+and+the+README+will+update+with+your+next+instructions.**)
 
 
-## ✅ Activity: Select a quest
+## 📚 Further Reading
 
-Click on a quest and follow the instructions to get started.
+Here are some additional resources to help you learn more about the Azure Developer CLI (azd) and the templates available:
 
-[![Static Badge](https://img.shields.io/badge/Quest-I_want_to_build_a_local_GenAI_prototype-green)](../../issues/new?title=Quest:+I+want+to+build+a+local+GenAI+prototype&labels=quest&body=🚀+I%27m+ready+to+build+my+first+local+GenAI+prototype%21+Let%27s+get+started+with+AI+in+JavaScript%21%0A%0A**Please+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
-
-[![Static Badge](https://img.shields.io/badge/Quest-I_want_to_move_my_prototype_to_Azure-orange)](../../issues/new?title=Quest:+I+have+a+prototype.+Let's+move+to+Azure&labels=quest&body=☁️+Time+to+take+my+AI+prototype+to+the+cloud%21+Excited+to+deploy+on+Azure+and+scale+up%21%0A%0A**Please+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
-
-[![Static Badge](https://img.shields.io/badge/Quest-I_want_to_add_a_simple_chat_interface_to_my_app-blue)](../../issues/new?title=Quest:+I+want+to+add+a+simple+chat+interface&labels=quest&body=%F0%9F%92%AC+Let%27s+add+a+chat+interface+and+make+my+AI+app+interactive%21+Ready+for+some+real-time+conversations%21%0A%0A**Please+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
-
-[![Static Badge](https://img.shields.io/badge/Quest-I_want_to_integrate_external_data_using_RAG-purple)](../../issues/new?title=Quest:+I+want+to+create+my+first+AI+app+with+RAG&labels=quest&body=%F0%9F%93%9A+I%27m+diving+into+RAG+and+building+my+first+retrieval-augmented+AI+app%21+Let%27s+do+this%21%0A%0A**Please+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
-
-[![Static Badge](https://img.shields.io/badge/Quest-I_want_to_build_an_AI_Agent-violet)](../../issues/new?title=Quest:+I+want+to+build+an+agent&labels=quest&body=%F0%9F%A4%96+Let%27s+build+an+AI+agent+that+can+help+and+interact+with+users%21+Excited+for+this+step%21%0A%0A**Please+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
-
-[![Static Badge](https://img.shields.io/badge/Quest-I_want_to_explore_frameworks-yellow)](../../issues/new?title=Quest:+I+want+to+explore+frameworks&labels=quest&body=🛠️+Let%27s+explore+frameworks+and+build+something+amazing%21+Excited+to+learn+and+experiment%21%0A%0A**Please+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
-
-[![Static Badge](https://img.shields.io/badge/Quest-I_want_to_use_MCP_tools-cyan)](../../issues/new?title=Quest:+I+want+to+use+MCP+tools&labels=quest&body=🔧+Time+to+dive+into+MCP+tools%21+Let%27s+get+started%21%0A%0A**Please+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
-
-[![Static Badge](https://img.shields.io/badge/Quest-I_want_to_create_templates-pink)](../../issues/new?title=Quest:+I+want+to+create+templates&labels=quest&body=📄+Let%27s+create+templates+to+streamline+future+projects%21+Excited+to+design+and+build%21%0A%0A**Please+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
+- [Kickstart JS/TS projects with azd Templates](https://techcommunity.microsoft.com/blog/azuredevcommunityblog/kickstart-projects-with-azd-templates/4295235)
+- [Kickstart your JavaScript projects with azd on YouTube](https://www.youtube.com/playlist?list=PLmsFUfdnGr3zzLIPdJsfdSwymIwOsyQ9Z)
 
 
