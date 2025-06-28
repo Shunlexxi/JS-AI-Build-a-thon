@@ -1,6 +1,5 @@
-import { BufferMemory } from "langchain/memory";
-import { ChatMessageHistory } from "langchain/stores/message/in_memory";
-import { AzureChatOpenAI } from "@langchain/openai";
+import ModelClient, { isUnexpected } from "@azure-rest/ai-inference";
+import { AzureKeyCredential } from "@azure/core-auth";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from 'url';
@@ -21,14 +20,10 @@ const __dirname = dirname(__filename);
 const projectRoot = path.resolve(__dirname, '../..');
 const pdfPath = path.join(projectRoot, 'data/FAQs.pdf'); // PDF file name
 
-const chatModel = new AzureChatOpenAI({
-  azureOpenAIApiKey: process.env.GITHUB_TOKEN,
-  azureOpenAIApiInstanceName: process.env.INSTANCE_NAME, // In target url: https://<INSTANCE_NAME>.services...
-  azureOpenAIApiDeploymentName: process.env.DEPLOYMENT_NAME, // i.e "gpt-4o"
-  azureOpenAIApiVersion: "2024-08-01-preview", // In target url: ...<VERSION>
-  temperature: 1,
-  maxTokens: 4096,
-});
+const client = new ModelClient(
+  process.env.AZURE_INFERENCE_SDK_ENDPOINT,
+  new AzureKeyCredential(process.env.AZURE_INFERENCE_SDK_KEY)
+);
 
 let pdfText = null; 
 let pdfChunks = []; 
@@ -80,61 +75,57 @@ function retrieveRelevantContent(query) {
     .map(item => item.chunk);
 }
 
-const sessionHistories = {};
-const sessionMemories = {};
-
 app.post("/chat", async (req, res) => {
   const userMessage = req.body.message;
-  const useRAG = req.body.useRAG === undefined ? true : req.body.useRAG;
-  const sessionId = req.body.sessionId || "default";
-
+  const useRAG = req.body.useRAG === undefined ? true : req.body.useRAG; 
+  let messages = [];
   let sources = [];
-
-  const memory = getSessionMemory(sessionId);
-  const memoryVars = await memory.loadMemoryVariables({});
-
   if (useRAG) {
     await loadPDF();
     sources = retrieveRelevantContent(userMessage);
-  }
-
-  // Prepare system prompt
-  const systemMessage = useRAG
-    ? {
-        role: "system",
-        content: sources.length > 0
-          ? `You are a helpful assistant for Contoso Electronics. You must ONLY use the information provided below to answer.
-
+    if (sources.length > 0) {
+      messages.push({ 
+        role: "system", 
+        content: `You are a helpful assistant answering questions about the company based on its employee handbook.
+Use ONLY the following information from the handbook to answer the user's question.
+If you can't find relevant information in the provided context, say "Sorry, I don't have information about that." Do not answer from general knowledge.
 --- EMPLOYEE HANDBOOK EXCERPTS ---
 ${sources.join('\n\n')}
 --- END OF EXCERPTS ---`
-          : `You are a helpful assistant for Contoso Electronics. The excerpts do not contain relevant information for this question. Reply politely: "I'm sorry, I don't know. The employee handbook does not contain information about that."`,
-      }
-    : {
+      });
+    } else {
+      messages.push({
         role: "system",
-        content: "You are a helpful and knowledgeable assistant. Answer the user's questions concisely and informatively.",
-      };
+        content: `You are a helpful assistant answering questions about the company based on its employee handbook.
+No relevant information was found in the provided handbook for this question.
+If you can't find relevant information in the provided context, say "Sorry, I don't have information about that." Do not answer from general knowledge.`
+      });
+    }
+  } else {
+    messages.push({
+      role: "system",
+      content: "You are a helpful assistant."
+    });
+  }
+  messages.push({ role: "user", content: userMessage });
 
   try {
-    // Build final messages array
-    const messages = [
-      systemMessage,
-      ...(memoryVars.chat_history || []),
-      { role: "user", content: userMessage },
-    ];
-
-    const response = await chatModel.invoke(messages);
-
-    await memory.saveContext({ input: userMessage }, { output: response.content });
-
-    res.json({ reply: response.content, sources });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      error: "Model call failed",
-      message: err.message,
-      reply: "Sorry, I encountered an error. Please try again."
+    const response = await client.path("chat/completions").post({
+      body: {
+        messages,
+        max_tokens: 4096,
+        temperature: 1,
+        top_p: 1,
+        model: "gpt-4o",
+      },
     });
+    if (isUnexpected(response)) throw new Error(response.body.error || "Model API error");
+    res.json({
+      reply: response.body.choices[0].message.content,
+      sources: useRAG ? sources : []
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Model call failed", message: err.message });
   }
 });
 
@@ -143,15 +134,55 @@ app.listen(PORT, () => {
   console.log(`AI API server running on port ${PORT}`);
 });
 
+// API Call (Simulate an AI response placeholder for future integration)
+async function _apiCall(message) {
+  const res = await fetch("http://localhost:3001/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ 
+      message,
+      useRAG: this.ragEnabled 
+    }),
+  });
+  const data = await res.json();
+  return data;
+}
 
-function getSessionMemory(sessionId) {
-  if (!sessionMemories[sessionId]) {
-    const history = new ChatMessageHistory();
-    sessionMemories[sessionId] = new BufferMemory({
-      chatHistory: history,
-      returnMessages: true,
-      memoryKey: "chat_history",
-    });
+// Handle sending a message and receiving a response
+async function _sendMessage() {
+  if (!this.inputMessage.trim() || this.isLoading) return;
+  
+  // Add user's message to the chat
+  const userMessage = {
+    role: 'user',
+    content: this.inputMessage
+  };
+  
+  this.messages = [...this.messages, userMessage];
+  const userQuery = this.inputMessage;
+  this.inputMessage = '';
+  this.isLoading = true;
+  
+  try {
+    const aiResponse = await this._apiCall(userQuery);
+
+    // Add AI's response to the chat, including sources if present
+    this.messages = [
+      ...this.messages,
+      { 
+        role: 'assistant', 
+        content: aiResponse.reply, 
+        sources: aiResponse.sources && aiResponse.sources.length > 0 ? aiResponse.sources : undefined 
+      }
+    ];
+  } catch (error) {
+    // Handle errors gracefully
+    console.error('Error calling model:', error);
+    this.messages = [
+      ...this.messages,
+      { role: 'assistant', content: 'Sorry, something went wrong.' }
+    ];
+  } finally {
+    this.isLoading = false;
   }
-  return sessionMemories[sessionId];
 }
